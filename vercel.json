@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-sync",
+      "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/price-refresh",
+      "schedule": "0 */12 * * *"
+    },
+    {
+      "path": "/api/cron/localize",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
