@@ -16,7 +16,7 @@ export interface FxResult {
 
 export async function getUsdToIlsRate(): Promise<FxResult> {
   // Check in-memory cache
-  if (cachedRate && cachedAt && Date.now() - cachedAt < CACHE_TTL_MS) {
+  if (cachedRate !== null && cachedAt !== null && Date.now() - cachedAt < CACHE_TTL_MS) {
     return { rate: cachedRate, isApproximate: !FX_API_URL }
   }
 
@@ -43,8 +43,8 @@ export async function getUsdToIlsRate(): Promise<FxResult> {
       cachedAt = Date.now()
       return { rate: dbRate, isApproximate: !FX_API_URL }
     }
-  } catch {
-    // Ignore DB errors
+  } catch (err) {
+    console.error('[FX] Failed to fetch rate from DB:', err)
   }
 
   // Fallback
@@ -60,17 +60,22 @@ async function fetchFromApi(): Promise<number | null> {
   const json = await res.json()
 
   // Support common FX API response formats
+  const toRate = (val: unknown): number | null => {
+    const n = Number(val)
+    return isNaN(n) || n <= 0 ? null : n
+  }
+
   // Format 1: { rates: { ILS: 3.75 } }
-  if (json.rates?.ILS) return Number(json.rates.ILS)
+  if (json.rates?.ILS) return toRate(json.rates.ILS)
 
   // Format 2: { USD_ILS: 3.75 }
-  if (json['USD_ILS']) return Number(json['USD_ILS'])
+  if (json['USD_ILS']) return toRate(json['USD_ILS'])
 
   // Format 3: { result: "success", rates: { ILS: 3.75 } }
-  if (json.result === 'success' && json.rates?.ILS) return Number(json.rates.ILS)
+  if (json.result === 'success' && json.rates?.ILS) return toRate(json.rates.ILS)
 
   // Format 4: { data: { ILS: { value: 3.75 } } }
-  if (json.data?.ILS?.value) return Number(json.data.ILS.value)
+  if (json.data?.ILS?.value) return toRate(json.data.ILS.value)
 
   return null
 }

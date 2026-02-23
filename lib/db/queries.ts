@@ -307,9 +307,10 @@ export async function upsertProduct(product: Partial<Product> & { slug: string; 
 }
 
 export async function upsertOffer(offer: Partial<Offer> & { product_id: string }): Promise<void> {
-  // Delete existing offer for product and re-insert
-  await supabaseAdmin.from('offers').delete().eq('product_id', offer.product_id)
-  await supabaseAdmin.from('offers').insert(offer)
+  const { error } = await supabaseAdmin
+    .from('offers')
+    .upsert(offer, { onConflict: 'product_id' })
+  if (error) throw error
 }
 
 export async function upsertAffiliateLink(link: Partial<AffiliateLink> & { product_id: string; affiliate_url: string }): Promise<void> {

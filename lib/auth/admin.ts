@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { timingSafeEqual } from 'crypto'
 
 function getAdminEmails(): string[] {
   const emails = process.env.ADMIN_EMAILS ?? ''
@@ -73,6 +74,13 @@ export async function isAdmin(): Promise<boolean> {
 
 export function validateCronSecret(headerValue: string | null): boolean {
   const secret = process.env.CRON_SECRET
-  if (!secret) return false
-  return headerValue === secret
+  if (!secret || !headerValue) return false
+  try {
+    const a = Buffer.from(secret)
+    const b = Buffer.from(headerValue)
+    if (a.length !== b.length) return false
+    return timingSafeEqual(a, b)
+  } catch {
+    return false
+  }
 }

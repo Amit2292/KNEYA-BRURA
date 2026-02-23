@@ -12,7 +12,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const jobId = await startSyncJob('price-refresh').catch(() => null)
+  const jobId = await startSyncJob('price-refresh').catch((err) => {
+    console.error('[price-refresh] Failed to create sync job:', err)
+    return null
+  })
 
   let refreshed = 0
   let failed = 0
@@ -37,6 +40,7 @@ export async function POST(request: NextRequest) {
         if (!details) continue
 
         const price = parseFloat(details.app_sale_price ?? details.sale_price ?? '0')
+        // AEProduct does not expose shipping cost - default to 0 (free shipping assumption)
         const shipping = 0
         const priceIls = convertToIls(price, rate)
         const shippingIls = convertToIls(shipping, rate)
@@ -57,10 +61,11 @@ export async function POST(request: NextRequest) {
         })
 
         // Update trust score
-        const rating = parseFloat(details.evaluate_rate ?? '0') || null
+        const ratingParsed = parseFloat(details.evaluate_rate ?? '0')
+        const rating = !isNaN(ratingParsed) && ratingParsed > 0 ? ratingParsed : null
         const ordersCount = details.lastest_volume ?? 0
         const sellerScore = details.seller_feedback_rate ? parseFloat(details.seller_feedback_rate) : null
-        const trustScore = computeTrustScore({ rating, orders_count: ordersCount, seller_score: sellerScore })
+        const trustScore = computeTrustScore({ rating, orders_count: Number(ordersCount), seller_score: sellerScore })
 
         await supabaseAdmin.from('products').update({
           rating: rating as number | null,
@@ -88,4 +93,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export { POST as GET }

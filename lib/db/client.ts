@@ -20,9 +20,12 @@ export const supabaseAdmin = createClient<any>(supabaseUrl, supabaseServiceKey, 
 })
 
 export function isSupabaseConfigured(): boolean {
+  const url = process.env.SUPABASE_URL
+  const anon = process.env.SUPABASE_ANON_KEY
+  const service = process.env.SUPABASE_SERVICE_ROLE_KEY
   return Boolean(
-    process.env.SUPABASE_URL &&
-    process.env.SUPABASE_ANON_KEY &&
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+    url && !url.includes('placeholder') &&
+    anon && !anon.includes('placeholder') &&
+    service && !service.includes('placeholder')
   )
 }

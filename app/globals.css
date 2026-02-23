@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: 'Arial', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Inter', 'Arial', 'Helvetica Neue', sans-serif;
+  --primary: #2463eb;
+  --bg-light: #f6f6f8;
+  --bg-dark: #111621;
+  --accent-teal: #14b8a6;
+  --accent-orange: #f97316;
 }
 
 html {
@@ -14,6 +19,8 @@ body {
   font-family: var(--font-sans);
   direction: rtl;
   text-align: right;
+  background-color: var(--bg-light);
+  color: #1a1a2e;
 }
 
 /* Ensure RTL for all elements */
@@ -21,7 +28,23 @@ body {
   box-sizing: border-box;
 }
 
-/* Line clamp utility */
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -38,7 +61,29 @@ body {
 
 /* Smooth transitions */
 a, button {
-  transition-property: color, background-color, border-color, opacity;
+  transition-property: color, background-color, border-color, opacity, box-shadow;
   transition-timing-function: ease-in-out;
   transition-duration: 150ms;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(36, 99, 235, 0.12);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #2463eb 0%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Bottom nav safe area */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
