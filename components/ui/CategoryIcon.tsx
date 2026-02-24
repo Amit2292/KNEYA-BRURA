@@ -8,13 +8,14 @@ interface CategoryIconProps {
 
 export function CategoryIcon({ icon, label, href }: CategoryIconProps) {
   return (
-    <Link href={href} className="flex flex-col items-center gap-2 group">
-      <div className="w-14 h-14 rounded-full bg-primary-50 flex items-center justify-center group-hover:bg-primary-100 transition-colors">
-        <span className="material-symbols-outlined text-2xl text-primary-600">{icon}</span>
+    <Link
+      href={href}
+      className="group cursor-pointer bg-white p-6 rounded-xl border border-slate-200 flex flex-col items-center justify-center gap-3 transition-all hover:shadow-lg hover:border-primary/30"
+    >
+      <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+        <span className="material-symbols-outlined text-3xl">{icon}</span>
       </div>
-      <span className="text-xs font-medium text-gray-700 group-hover:text-primary-600 transition-colors">
-        {label}
-      </span>
+      <span className="font-bold text-slate-900">{label}</span>
     </Link>
   )
 }

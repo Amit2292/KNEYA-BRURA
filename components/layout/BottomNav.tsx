@@ -5,10 +5,9 @@ import { usePathname } from 'next/navigation'
 
 const navItems = [
   { href: '/', icon: 'home', label: 'בית' },
-  { href: '/search', icon: 'search', label: 'חיפוש' },
-  { href: '/categories', icon: 'category', label: 'קטגוריות' },
-  { href: '/deals', icon: 'local_fire_department', label: 'מבצעים' },
-  { href: '/guides', icon: 'menu_book', label: 'מדריכים' },
+  { href: '/categories', icon: 'grid_view', label: 'קטגוריות' },
+  { href: '/deals', icon: 'favorite', label: 'מועדפים' },
+  { href: '/deals', icon: 'sell', label: 'דילים' },
 ]
 
 export function BottomNav() {
@@ -20,21 +19,21 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 right-0 left-0 z-50 bg-white border-t border-gray-200 pb-safe"
+      className="md:hidden fixed bottom-0 right-0 left-0 z-50 bg-white border-t border-slate-200 pb-safe"
       dir="rtl"
     >
-      <div className="flex items-stretch">
-        {navItems.map((item) => {
+      <div className="max-w-lg mx-auto flex items-center justify-between py-2 px-4">
+        {navItems.map((item, i) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
             <Link
-              key={item.href}
+              key={`${item.href}-${i}`}
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
-              className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-xs font-medium transition-colors ${
+              className={`flex flex-col items-center gap-1 text-xs font-medium transition-colors ${
                 isActive
-                  ? 'text-primary-600'
-                  : 'text-gray-500 hover:text-primary-600'
+                  ? 'text-primary'
+                  : 'text-slate-400 hover:text-primary'
               }`}
             >
               <span
@@ -44,7 +43,7 @@ export function BottomNav() {
               >
                 {item.icon}
               </span>
-              <span>{item.label}</span>
+              <span className={`text-[10px] ${isActive ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
             </Link>
           )
         })}

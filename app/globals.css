@@ -19,8 +19,9 @@ body {
   font-family: var(--font-sans);
   direction: rtl;
   text-align: right;
-  background-color: #ffffff;
-  color: #1a1a2e;
+  background-color: #f6f6f8;
+  color: #0f172a;
+  min-height: 100dvh;
 }
 
 * {
@@ -106,6 +107,11 @@ a, button {
 }
 .carousel-dots .dot.active {
   background-color: #2463eb;
+}
+
+/* Material Symbols fill variant */
+.material-symbols-outlined.fill-1 {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 /* Price history bar chart */
