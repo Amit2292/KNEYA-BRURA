@@ -195,6 +195,15 @@ export async function getProductsByCategory(
   return getProducts({ ...filters, categoryId })
 }
 
+export async function getSimilarProducts(
+  categoryId: string,
+  excludeProductId: string,
+  limit = 8
+): Promise<ProductWithOffer[]> {
+  const { products } = await getProducts({ categoryId, limit: limit + 1 })
+  return products.filter((p) => p.id !== excludeProductId).slice(0, limit)
+}
+
 // =====================
 // CLICKS
 // =====================

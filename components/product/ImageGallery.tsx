@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 interface ImageGalleryProps {
   images: string[]
@@ -10,6 +10,7 @@ interface ImageGalleryProps {
 
 export function ImageGallery({ images, alt }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const validImages = images.filter(Boolean)
 
   if (validImages.length === 0) {
@@ -20,40 +21,59 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
     )
   }
 
+  function handleScroll() {
+    if (!scrollRef.current) return
+    const scrollLeft = scrollRef.current.scrollLeft
+    const width = scrollRef.current.offsetWidth
+    const newIndex = Math.round(scrollLeft / width)
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < validImages.length) {
+      setActiveIndex(newIndex)
+    }
+  }
+
   return (
     <div dir="rtl">
-      {/* Main image */}
-      <div className="relative aspect-square bg-gray-50 rounded-xl overflow-hidden mb-3 border border-gray-200">
-        <Image
-          src={validImages[activeIndex]}
-          alt={alt}
-          fill
-          className="object-contain p-4"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority
-        />
+      {/* Swipeable carousel */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex overflow-x-auto hide-scrollbar rounded-xl bg-gray-50"
+        style={{ scrollSnapType: 'x mandatory' }}
+      >
+        {validImages.map((src, i) => (
+          <div
+            key={i}
+            className="flex-shrink-0 w-full aspect-square relative"
+            style={{ scrollSnapAlign: 'start' }}
+          >
+            <Image
+              src={src}
+              alt={`${alt} - תמונה ${i + 1}`}
+              fill
+              className="object-contain p-4"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority={i === 0}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Thumbnails */}
+      {/* Dot indicators */}
       {validImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {validImages.slice(0, 6).map((src, i) => (
+        <div className="carousel-dots flex justify-center gap-2 mt-3">
+          {validImages.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
-              className={`relative flex-shrink-0 w-16 h-16 rounded-lg border-2 overflow-hidden transition-colors ${
-                i === activeIndex ? 'border-brand-500' : 'border-gray-200 hover:border-gray-400'
-              }`}
+              onClick={() => {
+                scrollRef.current?.scrollTo({
+                  left: i * (scrollRef.current?.offsetWidth ?? 0),
+                  behavior: 'smooth',
+                })
+                setActiveIndex(i)
+              }}
+              className={`dot ${i === activeIndex ? 'active' : ''}`}
               aria-label={`תמונה ${i + 1}`}
-            >
-              <Image
-                src={src}
-                alt={`${alt} - תמונה ${i + 1}`}
-                fill
-                className="object-contain p-1"
-                sizes="64px"
-              />
-            </button>
+            />
           ))}
         </div>
       )}

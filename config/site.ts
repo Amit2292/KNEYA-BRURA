@@ -1,9 +1,10 @@
 export const SITE_CONFIG = {
-  name: 'קנייה-ברורה',
-  tagline: 'מחיר ברור, משלוח ברור, קליק אחד לקנייה',
+  name: 'קנייה ברורה',
+  tagline: 'קונים חכם. משלמים פחות.',
+  subtitle: 'דילים שנבחרו על ידי AI + המחירים המובנים הלכם מאליאקספרס ישירות ללבכם.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kenya-brura.co.il',
   description: 'השוו מחירים מאליאקספרס עם מחיר ברור בשקלים, זמן אספקה ודירוג אמון.',
-  affiliateDisclosure: 'אם תקנו דרך הקישור, ייתכן שנקבל עמלה קטנה ללא עלות נוספת עבורכם.',
+  affiliateDisclosure: 'אם תקנו דרך הקישורים באתר, ייתכן שנקבל עמלה קטנה ללא עלות נוספת עבורכם. זה מה שמאפשר לנו להמשיך לפעול.',
   priceDisclaimer: 'ייתכן מע"מ או מכס בהתאם לחוק ולסכום הקנייה.',
   fxDisclaimer: 'שער המרה משוער',
   contactEmail: 'info@kenya-brura.co.il',

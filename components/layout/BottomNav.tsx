@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const navItems = [
   { href: '/', icon: 'home', label: 'בית' },
+  { href: '/search', icon: 'search', label: 'חיפוש' },
   { href: '/categories', icon: 'category', label: 'קטגוריות' },
   { href: '/deals', icon: 'local_fire_department', label: 'מבצעים' },
   { href: '/guides', icon: 'menu_book', label: 'מדריכים' },
@@ -12,6 +13,10 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname()
+
+  // Hide on product pages where sticky CTA takes the bottom
+  const isProductPage = pathname.startsWith('/p/')
+  if (isProductPage) return null
 
   return (
     <nav

@@ -1,0 +1,100 @@
+services:
+  - type: web
+    name: kenya-brura
+    runtime: node
+    region: frankfurt
+    buildCommand: npm install && npm run build
+    startCommand: node .next/standalone/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: HOSTNAME
+        value: "0.0.0.0"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: AE_APP_KEY
+        sync: false
+      - key: AE_APP_SECRET
+        sync: false
+      - key: AE_TRACKING_ID
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_NAME
+        value: "קנייה ברורה"
+      - key: FX_FALLBACK_RATE_ILS
+        value: "3.75"
+      - key: ADMIN_EMAILS
+        sync: false
+
+  # Cron Jobs
+  - type: cron
+    name: kenya-brura-daily-sync
+    runtime: node
+    region: frankfurt
+    schedule: "0 3 * * *"
+    buildCommand: npm install
+    startCommand: |
+      curl -s -X POST "${RENDER_EXTERNAL_URL}/api/cron/daily-sync" \
+        -H "x-cron-secret: ${CRON_SECRET}" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: RENDER_EXTERNAL_URL
+        fromService:
+          type: web
+          name: kenya-brura
+          property: url
+      - key: CRON_SECRET
+        sync: false
+
+  - type: cron
+    name: kenya-brura-price-refresh
+    runtime: node
+    region: frankfurt
+    schedule: "0 */6 * * *"
+    buildCommand: npm install
+    startCommand: |
+      curl -s -X POST "${RENDER_EXTERNAL_URL}/api/cron/price-refresh" \
+        -H "x-cron-secret: ${CRON_SECRET}" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: RENDER_EXTERNAL_URL
+        fromService:
+          type: web
+          name: kenya-brura
+          property: url
+      - key: CRON_SECRET
+        sync: false
+
+  - type: cron
+    name: kenya-brura-localize
+    runtime: node
+    region: frankfurt
+    schedule: "30 3 * * *"
+    buildCommand: npm install
+    startCommand: |
+      curl -s -X POST "${RENDER_EXTERNAL_URL}/api/cron/localize" \
+        -H "x-cron-secret: ${CRON_SECRET}" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: RENDER_EXTERNAL_URL
+        fromService:
+          type: web
+          name: kenya-brura
+          property: url
+      - key: CRON_SECRET
+        sync: false

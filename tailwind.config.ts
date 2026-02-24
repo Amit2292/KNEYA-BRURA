@@ -41,11 +41,20 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Arial', 'Helvetica', 'sans-serif'],
-        display: ['Inter', 'Arial', 'sans-serif'],
+        sans: ['Heebo', 'Arial', 'Helvetica', 'sans-serif'],
+        display: ['Heebo', 'Arial', 'sans-serif'],
       },
       backdropBlur: {
         xs: '2px',
+      },
+      keyframes: {
+        'badge-pulse': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
+      },
+      animation: {
+        'badge-pulse': 'badge-pulse 2s ease-in-out infinite',
       },
     },
   },

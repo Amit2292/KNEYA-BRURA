@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: 'Inter', 'Arial', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Heebo', 'Arial', 'Helvetica Neue', sans-serif;
   --primary: #2463eb;
   --bg-light: #f6f6f8;
   --bg-dark: #111621;
@@ -19,11 +19,10 @@ body {
   font-family: var(--font-sans);
   direction: rtl;
   text-align: right;
-  background-color: var(--bg-light);
+  background-color: #ffffff;
   color: #1a1a2e;
 }
 
-/* Ensure RTL for all elements */
 * {
   box-sizing: border-box;
 }
@@ -35,6 +34,15 @@ body {
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Horizontal scroll snap */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap-x > * {
+  scroll-snap-align: start;
 }
 
 /* Line clamp utilities */
@@ -86,4 +94,21 @@ a, button {
 /* Bottom nav safe area */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Carousel dot indicators */
+.carousel-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  transition: background-color 0.2s;
+}
+.carousel-dots .dot.active {
+  background-color: #2463eb;
+}
+
+/* Price history bar chart */
+.price-bar {
+  transition: height 0.3s ease;
 }
